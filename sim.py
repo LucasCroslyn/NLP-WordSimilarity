@@ -1,8 +1,8 @@
 import math, re
-import sys
 import gensim.downloader
 
 from collections import Counter, defaultdict
+
 
 def tokenize(s):
     '''
@@ -11,6 +11,7 @@ def tokenize(s):
     :param s: The input string to tokenize into separate words (tokens).
     :return: Returns a list of all the words (tokens) from the input string. 
     '''
+    
     tokens = s.lower().split()
     trimmed_tokens = []
     for t in tokens:
@@ -123,6 +124,7 @@ class Window():
     Utilizes a term-term matrix-esque model. Each token stores other tokens that are around it (a 'window' around the token) and how often they appear next to each other.
     The model uses this to calcuate a cosine similarity score between two words.
     '''
+    
     def __init__(self, corpus, context_size=1):
         '''
         Initializes the model, including how big of a 'window' to use around tokens, and training the model on input data.
@@ -227,39 +229,3 @@ class Word2Vec():
         :return: Returns the calculated similarity score between the two input tokens.
         '''
         return round(self.vectors.similarity(word_1, word_2) * 10, 2)
-
-
-if __name__ == '__main__':
-
-    sys.stdout.reconfigure(encoding='utf-8')
-    method = sys.argv[1]
-
-    train_corpus_fname = sys.argv[2]
-    test_texts_fname = sys.argv[3]
-
-    test_tuples = [x.strip().split(',') for x in open(test_texts_fname, encoding='utf8')]
-
-    if method == 'baseline':
-        model = Baseline()
-
-    elif method == 'td':
-        model = Term_document(train_corpus_fname)
-
-    elif method == "window":
-        model = Window(train_corpus_fname)
-
-    elif method == "w2v":
-        model = Word2Vec()
-
-    # Run the classify method for each instance
-    results = [model.calc_sim(x[0], x[1]) for x in test_tuples]
-
-    # Create output file at given output file name
-    # Store predictions in output file
-
-    outFile = sys.argv[4]
-    out = open(outFile, 'w', encoding='utf-8')
-    for r in results:
-        out.write(str(r) + '\n')
-    out.close()
-
