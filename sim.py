@@ -103,7 +103,7 @@ class Term_document():
         '''
         
         # If either word was not seem in the training data, use a default similairty score.
-        if word_1 not in self.embeddings or word_1 not in self.embeddings:
+        if word_1 not in self.embeddings or word_2 not in self.embeddings:
             return 5
         else:
             # Cosine similarity calculation
